@@ -11,9 +11,7 @@ import com.applitools.eyes.visualgrid.services.VisualGridRunner;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-/**
- * Unit test for simple App.
- */
+
 public class AppTest {
 
 	public static void main(String[] args) {
@@ -26,49 +24,63 @@ public class AppTest {
 		// Create Eyes object with the runner, meaning it'll be a Visual Grid eyes.
 		Eyes eyes = new Eyes(runner);
 
-		setUp(eyes);
+		setUp1and2(eyes);
+
+		Tests tests = new Tests();
 
 		try {
 			Part1 part1 = new Part1();
+
+			tests.mainPage(webDriver, eyes, part1.V1_PRODUCT_VERSION);
+			tests.filterByColor(webDriver, eyes, part1.V1_PRODUCT_VERSION);
+			tests.productDetails(webDriver, eyes, part1.V1_PRODUCT_VERSION);
+
+		} finally  {
+			eyes.abortAsync();
+		}
+
+		setUp1and2(eyes);
+
+		try {
 			Part2 part2 = new Part2();
+
+			tests.mainPage(webDriver, eyes, part2.DEV_BRANCH_VERSION);
+			tests.filterByColor(webDriver, eyes, part2.DEV_BRANCH_VERSION);
+			tests.productDetails(webDriver, eyes, part2.DEV_BRANCH_VERSION);
+
+		} finally  {
+			eyes.abortAsync();
+		}
+
+		setUp3(eyes);
+		try {
+
 			Part3 part3 = new Part3();
 
-			part1.mainPage(webDriver, eyes, part1.V1_PRODUCT_VERSION);
-			part1.filterByColor(webDriver, eyes, part1.V1_PRODUCT_VERSION);
-			part1.productDetails(webDriver, eyes, part1.V1_PRODUCT_VERSION);
-			part1.mainPage(webDriver, eyes, part2.DEV_BRANCH_VERSION);
-			part1.filterByColor(webDriver, eyes, part2.DEV_BRANCH_VERSION);
-			part1.productDetails(webDriver, eyes, part2.DEV_BRANCH_VERSION);
-			part1.mainPage(webDriver, eyes, part3.FINAL_PRODUCTION_VERSION);
-			part1.filterByColor(webDriver, eyes, part3.FINAL_PRODUCTION_VERSION);
-			part1.productDetails(webDriver, eyes, part3.FINAL_PRODUCTION_VERSION);
+			tests.mainPage(webDriver, eyes, part3.FINAL_PRODUCTION_VERSION);
+			tests.filterByColor(webDriver, eyes, part3.FINAL_PRODUCTION_VERSION);
+			tests.productDetails(webDriver, eyes, part3.FINAL_PRODUCTION_VERSION);
 
-
-
+		} finally  {
+			eyes.abortAsync();
+		}
 
 	}
 
-	public static void setUp(Eyes eyes) {
+	public static void setUp1and2(Eyes eyes) {
 
-		// Initialize eyes Configuration
 		Configuration config = new Configuration();
-
-		// You can get your api key from the Applitools dashboard
-		config.setApiKey("q98eCNGC3ydV9wjQS7TLkpJkVhCC8pWotI100BlADj5eUw110");
-
-		// create a new batch info instance and set it to the configuration
-		config.setBatch(new BatchInfo("HolidayShopping"));
-
-		// Add browsers with different viewports
-		config.addBrowser(1200, 800, BrowserType.CHROME);
-		config.addBrowser(1200, 800, BrowserType.FIREFOX);
-		config.addBrowser(1200, 800, BrowserType.EDGE_CHROMIUM);
-		config.addBrowser(1200, 800, BrowserType.SAFARI);
-		config.addDeviceEmulation(DeviceName.iPhone_X, ScreenOrientation.PORTRAIT);
-
+		config = Config.getConfigForTest1And2();
 		// Set the configuration object to eyes
 		eyes.setConfiguration(config);
 
+	}
+
+	public static void setUp3(Eyes eyes) {
+		Configuration config = new Configuration();
+		config = Config.getConfigForTest3();
+		// Set the configuration object to eyes
+		eyes.setConfiguration(config);
 	}
 
 
